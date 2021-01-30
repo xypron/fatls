@@ -83,16 +83,16 @@ main(int argc, char *argv[])
 		else
 			ret = stat(entry[0].d_name, &pstat);
 		if (ret == -1) {
-			perror("stat");
-			continue;
+			printf("%-35s ", "stat() failed");
+			goto nostat;
 		}
 
 		tm = gmtime(&pstat.st_ctim.tv_sec);
 
 		ret = strftime(buf, sizeof(buf), "%F %T", tm);
 		if (!ret) {
-			perror("strftime");
-			continue;
+			printf("%-35s ", "strftime() failed");
+			goto nostat;
 		}
 
 		printf("%s ", buf);
@@ -105,6 +105,7 @@ main(int argc, char *argv[])
 			bytes += pstat.st_size;
 		}
 
+nostat:
 		/*
 		 * Write both the short name and the long name.
 		 */
