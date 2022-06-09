@@ -75,8 +75,10 @@ main(int argc, char *argv[])
 		 * For backward compatibility the end of the directory
 		 * list is also signaled by d_reclen == 0.
 		 */
-		if (ret < 1)
+		if (ret < 1) {
+			perror("VFAT_IOCTL_READDIR_BOTH");
 			break;
+		}
 
 		if (*entry[1].d_name)
 			ret = stat(entry[1].d_name, &pstat);
@@ -112,10 +114,8 @@ nostat:
 		printf("%-12s %s\n", entry[0].d_name, entry[1].d_name);
 	}
 
-	if (ret == -1) {
-		perror("VFAT_IOCTL_READDIR_BOTH");
+	if (ret == -1)
 		exit(EXIT_FAILURE);
-	}
 
 	/*
 	 * Close the file descriptor.
